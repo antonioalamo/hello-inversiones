@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aplicacion
+spec:
+  replicas: 1
+  selector:
+    matchLabels:      
+      app.kubernetes.io/name: aplicacion
+  template:
+    metadata:
+      labels:        
+        app.kubernetes.io/name: aplicacion
+    spec:      
+      containers:
+        - name: aplicacion
+          image: docker.io/library/httpd
+          imagePullPolicy: 'Always'
+          # args:
+          # - >-
+          #   httpd
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 10
+            initialDelaySeconds: 5
+            terminationGracePeriodSeconds: 60
